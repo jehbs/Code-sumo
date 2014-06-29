@@ -1,0 +1,288 @@
+
+//projeto com os 3 sensores
+#include <DateTime.h>
+      // sensores do ultrasom
+      
+#define Sensorsom1 3
+#define Sensorsom2 5
+#define Sensorsom3 6
+#define Sensorsom4 9
+
+long pwmRange1, inch1, cm1, pwmRange2, inch2, cm2, pwmRange3, inch3, cm3, pwmRange4, inch4, cm4;
+
+
+      // definir os sensoores de linha
+      
+int Sensorline1 = 2; //connected to digital 2
+int Sensorline2 = 4; //connected to digital 4
+int Sensorline3 = 7; //connected to digital 7
+int Sensorline4 = 8; //connected to digital 8
+int Sensorval=LOW;
+unsigned long m;
+
+   // sensores do infravermelho 
+   
+ 
+   
+void setup() 
+{
+// Inicia as comunicações seriais
+
+         
+         pinMode(Sensorsom1, INPUT);
+         pinMode(Sensorsom2, INPUT);
+         pinMode(Sensorsom3, INPUT);
+         pinMode(Sensorsom4, INPUT);
+
+         pinMode(13,OUTPUT); 
+         Serial.begin(115200);
+}
+
+// parte fora do loop
+
+       //  parte do infravermelhor
+       
+float sensorinfra1(byte pin) 
+{
+    int tmp=0;
+      tmp = analogRead(pin);
+	  if (tmp < 3)
+		return -1; // invalid value
+          else
+        	return ((6787.0 /((float)tmp - 3.0)) - 4.0)/2;
+
+}
+
+float sensorinfra2(byte pin) 
+{
+    int tmp=0;
+      tmp = analogRead(pin);
+	  if (tmp < 3)
+		return -1; // invalid value
+          else
+        	return ((6787.0 /((float)tmp - 3.0)) - 4.0)/2;
+
+}
+  
+ float sensorinfra3(byte pin) 
+{
+    int tmp=0;
+      tmp = analogRead(pin);
+	  if (tmp < 3)
+		return -1; // invalid value
+          else
+        	return ((6787.0 /((float)tmp - 3.0)) - 4.0)/2;
+
+}
+
+float sensorinfra4(byte pin) 
+{
+    int tmp=0;
+      tmp = analogRead(pin);
+	  if (tmp < 3)
+		return -1; // invalid value
+          else
+        	return ((6787.0 /((float)tmp - 3.0)) - 4.0)/2;
+
+}
+      
+      
+       //parte do sensor line
+   
+   int readQ1()
+   {
+      //Returns value from the QRE1113 
+      //Lower numbers mean more refleacive
+      //More than 3000 means nothing was reflected.
+        pinMode( Sensorline1, OUTPUT );
+        digitalWrite( Sensorline1, HIGH );  
+        delayMicroseconds(10);
+        pinMode( Sensorline1, INPUT );
+
+        long time1 = micros();
+
+      //time how long the input is HIGH, but quit after 3ms as nothing happens after that
+        while (digitalRead(Sensorline1) == HIGH && micros() - time1 < 3000); 
+          int diff = micros() - time1;
+
+      return diff;
+    }
+
+
+    int readQ2()
+      {
+          //Returns value from the QRE1113 
+          //Lower numbers mean more refleacive
+          //More than 3000 means nothing was reflected.
+            pinMode( Sensorline2, OUTPUT );
+            digitalWrite( Sensorline2, HIGH );  
+            delayMicroseconds(10);
+            pinMode( Sensorline2, INPUT );
+
+            long time2 = micros();
+
+          //time how long the input is HIGH, but quit after 3ms as nothing happens after that
+              while (digitalRead(Sensorline2) == HIGH && micros() - time2 < 3000); 
+              int diff = micros() - time2;
+
+      return diff;
+        }
+        int readQ3()
+      {
+          //Returns value from the QRE1113 
+          //Lower numbers mean more refleacive
+          //More than 3000 means nothing was reflected.
+            pinMode( Sensorline3, OUTPUT );
+            digitalWrite( Sensorline3, HIGH );  
+            delayMicroseconds(10);
+            pinMode( Sensorline3, INPUT );
+
+            long time3 = micros();
+
+          //time how long the input is HIGH, but quit after 3ms as nothing happens after that
+              while (digitalRead(Sensorline3) == HIGH && micros() - time3 < 3000); 
+              int diff = micros() - time3;
+
+      return diff;
+        }
+        
+        int readQ4()
+      {
+          //Returns value from the QRE1113 
+          //Lower numbers mean more refleacive
+          //More than 3000 means nothing was reflected.
+            pinMode( Sensorline4, OUTPUT );
+            digitalWrite( Sensorline4, HIGH );  
+            delayMicroseconds(10);
+            pinMode( Sensorline4, INPUT );
+
+            long time4 = micros();
+
+          //time how long the input is HIGH, but quit after 3ms as nothing happens after that
+              while (digitalRead(Sensorline4) == HIGH && micros() - time4 < 3000); 
+              int diff = micros() - time4;
+
+      return diff;
+        }
+        
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+void loop() 
+
+{
+m =  millis();
+while(m < 90001 && m >5000) // contador do tempo do robo
+  {
+   // parte do ultrasom
+    // o 1 é o sensor da frente e o 2 é o sensor de trás
+
+          pwmRange1 = pulseIn(Sensorsom1, HIGH);
+	 // 147 μS por polegada, de acordo com o datasheet
+	 inch1 = pwmRange1 / 147;
+	 // converte polegadas para cm
+	 cm1 = inch1 * 2.54;
+	 Serial.print(inch1);
+	 Serial.print(" inches  ");
+	 Serial.print(cm1);
+	 Serial.println(" cm");
+         
+          pwmRange2 = pulseIn(Sensorsom2, HIGH);
+	 // 147 μS por polegada, de acordo com o datasheet
+	 inch2 = pwmRange2 / 147;
+	 // converte polegadas para cm
+	 cm2 = inch2 * 2.54;
+	 Serial.print(inch2);
+	 Serial.print(" inches  ");
+	 Serial.print(cm2);
+	 Serial.println(" cm");
+          delay(500);
+          
+          pwmRange3 = pulseIn(Sensorsom3, HIGH);
+	 // 147 μS por polegada, de acordo com o datasheet
+	 inch3 = pwmRange3 / 147;
+	 // converte polegadas para cm
+	 cm3 = inch3 * 2.54;
+	 Serial.print(inch3);
+	 Serial.print(" inches  ");
+	 Serial.print(cm3);
+	 Serial.println(" cm");
+
+          pwmRange4 = pulseIn(Sensorsom4, HIGH);
+	 // 147 μS por polegada, de acordo com o datasheet
+	 inch4 = pwmRange4 / 147;
+	 // converte polegadas para cm
+	 cm4 = inch4 * 2.54;
+	 Serial.print(inch4);
+	 Serial.print(" inches  ");
+	 Serial.print(cm4);
+	 Serial.println(" cm");
+        
+   // parte do seguidor de linha 
+   
+  int Sensorline1 = readQ1();
+  int Sensorline2 = readQ2();
+  int Sensorline3 = readQ3();
+  int Sensorline4 = readQ4();
+     
+   // parte do infravermelho  
+          
+         Serial.print(sensorinfra1(A0));
+         Serial.print(sensorinfra2(A1));
+         Serial.print(sensorinfra3(A2));
+         Serial.print(sensorinfra4(A3));
+	 
+   delay(500);
+
+    
+    
+//////////////////// estrategia///////////////////
+
+  if (Sensorline1 >3000 && Sensorline2 >3000 && Sensorline3 >3000 && Sensorline4 >3000  ) //testa os sensores de linha para ver se TODOS estão na parte preta
+    {
+    if ( sensorinfra1 < 20 || sensorinfra2 < 20 || sensorinfra3 < 20 ||sensorinfra4 < 20 || Sensorsom1 < 150 || Sensorsom2 < 150 ||Sensorsom3 < 150 ||Sensorsom4 < 150 ) //verifica se os sensores estao encontrando algo
+      { 
+       if (sensorinfra1 < 20 || Sensorsom1 < 150 )
+         {// o infravermelho da frente que detectou, 
+         //atacar
+         }
+       else if (sensorinfra2 < 20 || Sensorsom2 < 150)
+          { // o sensor de trras que detectou,  girar  180º
+          }
+       else if (sensorinfra3 < 20 || Sensorsom3 < 150)
+          { // o sensor da lateral direita que detectou,  girar  90º
+          } 
+       else 
+          {// foi o sensor esquerdo que detectou, girar -90º
+          }
+        }
+    else //nenhum sensor o detectou, logo ele nao esta no campo de visão 
+        { // gira e torno do proprio eixo para voltar a procurar
+        }
+    } 
+    else //sensor esta na superficie branca (limite da arena)
+    {
+    if (Sensorline1 <3000 && Sensorline2 <3000)
+      { // sensores da fente encontraram a linha branca
+      // dar ré e girar 180º 
+      }
+    else if (Sensorline3 <3000 && Sensorline4 <3000)
+      { // sensores de trás encontraram a linha branca
+      // ir para frente 
+      }
+    else
+      { // teste de certeza do sensor de linha nao deu em nada
+      // fazer nada
+      }
+    }               
+  }
+  
+}// fim do void loop 
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////// fim///////////////////////////////////////////////////////////////////
+
